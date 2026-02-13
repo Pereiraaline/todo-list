@@ -57,6 +57,7 @@ function adicionarUmaTarefa(lista, categoria, horarioTarefa, titulo) {
     descricao: titulo,
     categoria: categoria,
     horario: horarioTarefa,
+    concluida: false
   });
 
   salvarTarefa(lista);
@@ -93,6 +94,21 @@ function editarTarefa(obj) {
   document.getElementById("horario-tarefa").value = item.horario;
   document.getElementById("titulo-tarefa").value = item.descricao;
 }
+
+// TAREFA CONCLUÍDA
+
+function tarefaConcluida(botao) {
+  let index = botao.parentElement.classList[1];
+
+  let lista = JSON.parse(localStorage.getItem("lista")) || [];
+
+  lista[index].concluida = !lista[index].concluida;
+
+  salvarTarefa(lista);
+
+  reload();
+}
+
 
 // SUBMIT DO FORMULÁRIO
 
@@ -138,18 +154,23 @@ window.onload = function () {
 
   const containerLista = document.getElementById("tarefas-dia");
 
+  containerLista.innerHTML = "";
+
   if (tarefas.length === 0) {
     containerLista.innerHTML = "Ainda não há tarefas para este dia";
     containerLista.classList.add("msg-nao-ha-tarefas");
     return;
   }
 
-  containerLista.innerHTML = "";
+  containerLista.classList.remove("msg-nao-ha-tarefas");
 
   tarefas.forEach((tarefa, i) => {
     containerLista.innerHTML += `
-      <li class="tarefas-dia ${i}">
-        <button class="btn-tarefa-concluida">
+      <li class="tarefas-dia ${i} ${tarefa.concluida ? "tarefa-concluida" : ""}">
+        
+        <button 
+          class="btn-tarefa-concluida ${tarefa.concluida ? "check-ativo" : ""}" 
+          onclick="tarefaConcluida(this)">
           <i class="fa-solid fa-check"></i>
         </button>
 
@@ -160,18 +181,24 @@ window.onload = function () {
         </div>
 
         <div>
-          <button class="${i} btn-editar-tarefa" onclick="editarTarefa(this)">
+          <button 
+            class="${i} btn-editar-tarefa" 
+            onclick="editarTarefa(this)">
             <i class="fa-solid fa-pen"></i>
           </button>
 
-          <button class="${i} btn-excluir-tarefa" onclick="removerTarefa(this)">
+          <button 
+            class="${i} btn-excluir-tarefa" 
+            onclick="removerTarefa(this)">
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
+
       </li>
     `;
   });
 };
+
 
 // RELOAD
 

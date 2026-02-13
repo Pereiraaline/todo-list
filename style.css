@@ -219,3 +219,17 @@ main{
     color: #fdfdfd;
 }
 
+.btn-tarefa-concluida {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #bbb; /* claro quando NÃO concluído */
+  transition: 0.2s ease;
+}
+
+.btn-tarefa-concluida.check-ativo {
+  color: #000 /* escuro quando concluído */
+}
+
+
+
